@@ -1,8 +1,14 @@
 #include "stdafx.h"
-#include <d3d11.h>
+#include <d3d11_1.h>
 #include <dxgi.h>
-#include <xnamath.h>
+#include <DirectXMath.h>
+using namespace DirectX;
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+//#pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "D3DCompiler.lib")
+//#pragma comment(lib, "winmm.lib")
 
 //Global Varibles
 ID3D11Device     *g_pD3D11Device;
@@ -55,9 +61,11 @@ HRESULT CreateD3D11Device(HWND hWnd)
 
     if (FAILED(hr))
         return hr;
+	return hr;
 }
 
 HRESULT InitD3D11Device()
 {
-
+	HRESULT hr = S_OK;
+	return hr;
 }
