@@ -1,14 +1,13 @@
 #include "stdafx.h"
 #include <d3d11_1.h>
 #include <dxgi.h>
+#include <D3DCompiler.h>
 #include <DirectXMath.h>
 using namespace DirectX;
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
-//#pragma comment(lib, "dxguid.lib")
 #pragma comment(lib, "D3DCompiler.lib")
-//#pragma comment(lib, "winmm.lib")
 
 //Global Varibles
 ID3D11Device     *g_pD3D11Device;
@@ -66,6 +65,20 @@ HRESULT CreateD3D11Device(HWND hWnd)
 
 HRESULT InitD3D11Device()
 {
-	HRESULT hr = S_OK;
+	HRESULT hr = S_OK; 
+	ID3DBlob *pVsShaderBlob;
+	ID3DBlob *pPsShaderBlob;
+	DWORD dwShaderFlags = 0;
+#ifdef _DEBUG
+	dwShaderFlags |= D3DCOMPILE_DEBUG;
+	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+	D3D11_INPUT_ELEMENT_DESC  pInputElementDesc[] = 
+	{ 
+		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0}
+	};
+	D3DCompileFromFile(L"Shader.hlsl", NULL, NULL, "VS", "ps_5_0", dwShaderFlags, 0, &pVsShaderBlob, NULL);
+	g_pD3D11Device->CreateInputLayout(pInputElementDesc, ARRAYSIZE(pInputElementDesc), pVsShaderBlob->GetBufferPointer(), pVsShaderBlob->GetBufferSize(), &g_pD3D11InputLayout);
 	return hr;
 }
