@@ -95,9 +95,9 @@ HRESULT InitD3D11Device()
     //Create Vexter Buffer
     InputVertex pInputVertex[] = { 
         { XMFLOAT3(-1.0, -1.0,0),XMFLOAT2(0.0f,1.0f) },
-        { XMFLOAT3( -1.0, 1.0,0),XMFLOAT2(0.0f,0.0f) },
-        { XMFLOAT3( 1.0,1.0,0),XMFLOAT2(1.0,0.0) },
-        { XMFLOAT3(1.0,-1.0,0),XMFLOAT2(1.0,1.0) }
+        { XMFLOAT3( -1.0, 1.0,0),XMFLOAT2(0.0f,0.1f) },
+        { XMFLOAT3( 1.0,1.0,0),XMFLOAT2(1.0f,0.1f) },
+        { XMFLOAT3(1.0,-1.0,0),XMFLOAT2(1.0f,1.0f) }
     };
     D3D11_BUFFER_DESC descVB = { 0 };
     D3D11_SUBRESOURCE_DATA  VBInitData = { 0 };
@@ -127,13 +127,14 @@ HRESULT InitD3D11Device()
     //Create Pixel Shader
     D3DCompileFromFile(L"PS.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", dwShaderFlags, 0, &pPsShaderBlob, NULL);
     g_pD3D11Device->CreatePixelShader(pPsShaderBlob->GetBufferPointer(), pPsShaderBlob->GetBufferSize(), NULL, &g_pPixelShader);
+	pPsShaderBlob->Release();
     //Create Render Target View
     ID3D11Texture2D *pRenderTargetTexture;
     g_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pRenderTargetTexture);
     g_pD3D11Device->CreateRenderTargetView(pRenderTargetTexture, NULL, &g_pRenderTargetView);
     pRenderTargetTexture->Release();
     //Create Shader Resource View
-    hr = CreateWICTextureFromFileEx(g_pD3D11Device, L"..\\Texture\\texture.png", 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+    hr = CreateWICTextureFromFileEx(g_pD3D11Device, L"..\\Texture\\JiaLi.jpg", 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
         0, WIC_LOADER_DEFAULT, NULL, &g_pShaderResourceView);
     if (FAILED(hr))
     {
@@ -174,11 +175,9 @@ HRESULT InitD3D11Device()
 	return hr;
 }
 
-HRESULT Render(HWND hwnd)
+HRESULT Render()
 {
     HRESULT hr = S_OK;
-    CreateD3D11Device(hwnd);
-    InitD3D11Device();
     const UINT strideVB = sizeof(InputVertex), offsetVB = 0;
     g_pD3D11DeviceContext->IASetInputLayout(g_pD3D11InputLayout);
     g_pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -195,18 +194,23 @@ HRESULT Render(HWND hwnd)
     D3D11_VIEWPORT viewPort = { 0 };
     DXGI_SWAP_CHAIN_DESC descSwapChain = { 0 };
     g_pDXGISwapChain->GetDesc(&descSwapChain);
-    viewPort.TopLeftX = (FLOAT)descSwapChain.BufferDesc.Width / 5;
-    viewPort.TopLeftY = (FLOAT)descSwapChain.BufferDesc.Height / 5;
-    viewPort.Width = (FLOAT)descSwapChain.BufferDesc.Width * 3 /5;
-    viewPort.Height = (FLOAT)descSwapChain.BufferDesc.Height *3 /5;
+	viewPort.TopLeftX = (FLOAT)descSwapChain.BufferDesc.Width / 5;
+	viewPort.TopLeftY = 0;// (FLOAT)descSwapChain.BufferDesc.Height / 9;
+	viewPort.Width = 670; //(FLOAT)descSwapChain.BufferDesc.Width * 5 / 7;
+	viewPort.Height = 810;// (FLOAT)descSwapChain.BufferDesc.Height;// *7 / 9;
     viewPort.MinDepth = 0.0;
     viewPort.MaxDepth = 1.0;
     g_pD3D11DeviceContext->RSSetViewports(1, &viewPort);
     g_pD3D11DeviceContext->RSSetState(g_pRasterize);
     g_pD3D11DeviceContext->DrawIndexed(6, 0, 0);
 
-    g_pDXGISwapChain->Present(0, 0);
+    //g_pDXGISwapChain->Present(0, 0);
     return hr;
+}
+
+void Present()
+{
+	g_pDXGISwapChain->Present(0, 0);
 }
 
 void CleanupDevice()
