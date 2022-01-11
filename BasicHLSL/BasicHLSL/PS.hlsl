@@ -1,10 +1,9 @@
-struct VS_OUTPUT
-{
-	float4 pos:SV_POSITION;
-	float4 color:COLOR;
-};
+#include "Type.hlsli"
+
+Texture2D g_Tex : register(t0);
+SamplerState g_SamLinear : register(s0);
 
 float4 PS(VS_OUTPUT psInput) : SV_TARGET
 {
-	return psInput.color;
+    return g_Tex.Sample(g_SamLinear,psInput.texcoord);
 }

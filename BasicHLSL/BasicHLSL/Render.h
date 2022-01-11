@@ -4,7 +4,7 @@ using namespace DirectX;
 typedef struct _InputVertex
 {
     XMFLOAT3 position;
-    XMFLOAT4 color;
+    XMFLOAT2 texcoord;
 }InputVertex; 
 
 HRESULT CreateD3D11Device(HWND hWnd);
