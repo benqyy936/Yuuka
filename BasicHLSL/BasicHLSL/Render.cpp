@@ -134,7 +134,7 @@ HRESULT InitD3D11Device()
     g_pD3D11Device->CreateRenderTargetView(pRenderTargetTexture, NULL, &g_pRenderTargetView);
     pRenderTargetTexture->Release();
     //Create Shader Resource View
-    hr = CreateWICTextureFromFileEx(g_pD3D11Device, L"..\\Texture\\JiaLi.jpg", 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
+    hr = CreateWICTextureFromFileEx(g_pD3D11Device, L"..\\Texture\\texture.png", 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ,
         0, WIC_LOADER_DEFAULT, NULL, &g_pShaderResourceView);
     if (FAILED(hr))
     {
@@ -194,10 +194,10 @@ HRESULT Render()
     D3D11_VIEWPORT viewPort = { 0 };
     DXGI_SWAP_CHAIN_DESC descSwapChain = { 0 };
     g_pDXGISwapChain->GetDesc(&descSwapChain);
-	viewPort.TopLeftX = (FLOAT)descSwapChain.BufferDesc.Width / 5;
-	viewPort.TopLeftY = 0;// (FLOAT)descSwapChain.BufferDesc.Height / 9;
-	viewPort.Width = 670; //(FLOAT)descSwapChain.BufferDesc.Width * 5 / 7;
-	viewPort.Height = 810;// (FLOAT)descSwapChain.BufferDesc.Height;// *7 / 9;
+	viewPort.TopLeftX = (FLOAT)descSwapChain.BufferDesc.Width / 7;
+	viewPort.TopLeftY =  (FLOAT)descSwapChain.BufferDesc.Height / 9;
+	viewPort.Width = (FLOAT)descSwapChain.BufferDesc.Width * 5 / 7;
+	viewPort.Height = (FLOAT)descSwapChain.BufferDesc.Height *7 / 9;
     viewPort.MinDepth = 0.0;
     viewPort.MaxDepth = 1.0;
     g_pD3D11DeviceContext->RSSetViewports(1, &viewPort);

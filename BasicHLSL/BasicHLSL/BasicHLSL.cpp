@@ -41,6 +41,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_BASICHLSL));
 
+    //Render Object
+    CreateD3D11Device(g_hWnd);
+    InitD3D11Device();
+    Render();
+
     MSG msg = {0};
 
     // 主消息循环: 
@@ -56,7 +61,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            Render(g_hWnd);
+            Present();
         }
     }
     CleanupDevice();
